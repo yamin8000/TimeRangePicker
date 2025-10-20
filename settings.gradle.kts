@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "TimeRangePicker"
 include(":app")
+include(":library")
