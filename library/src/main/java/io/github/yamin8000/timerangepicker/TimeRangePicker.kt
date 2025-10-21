@@ -3,7 +3,6 @@ package io.github.yamin8000.timerangepicker
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -18,8 +17,10 @@ import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.TextStyle
@@ -27,15 +28,14 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.toSize
 import io.github.yamin8000.timerangepicker.utils.Utility.euclideanDistance
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
 private const val QUANT = 360 / 24f
-private const val FONT_SCALE = 50f
-private const val PADDING_SCALE = 40
+private const val FONT_SCALE = 24f
 
 @Composable
 fun TimeRangePicker(
@@ -51,10 +51,14 @@ fun TimeRangePicker(
     CompositionLocalProvider(
         value = LocalLayoutDirection provides LayoutDirection.Ltr,
         content = {
+            val haptic = LocalHapticFeedback.current
+
             val density = LocalDensity.current
+            val densityFontScale = remember(density) { density.fontScale }
             val window = LocalWindowInfo.current
-            val padding = remember(window, density) {
-                with(density) { (window.containerSize.width / PADDING_SCALE).toDp() }
+
+            val fontSize = remember(window, density) {
+                window.containerSize.toSize().minDimension / FONT_SCALE * (1 + densityFontScale) / 2
             }
 
             var points by remember { mutableStateOf(mapOf<Float, Offset>()) }
@@ -67,7 +71,6 @@ fun TimeRangePicker(
             Canvas(
                 modifier = modifier
                     .aspectRatio(1f)
-                    .padding(padding)
                     .pointerInput(Unit) {
                         detectDragGestures(
                             onDragStart = { dragStartingPoint ->
@@ -99,11 +102,17 @@ fun TimeRangePicker(
                                 if (near != null) {
                                     when (dragOrigin) {
                                         DragOrigin.End -> {
-                                            state.end = near.key
+                                            if (state.end != near.key) {
+                                                state.end = near.key
+                                                haptic.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
+                                            }
                                         }
 
                                         DragOrigin.Start -> {
-                                            state.start = near.key
+                                            if (state.start != near.key) {
+                                                state.start = near.key
+                                                haptic.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
+                                            }
                                         }
 
                                         null -> {}
@@ -113,10 +122,8 @@ fun TimeRangePicker(
                         )
                     },
                 onDraw = {
-                    val fontSize = size.minDimension / FONT_SCALE
-
                     val ringWidth = size.minDimension / QUANT
-                    val ringSize = (size.minDimension / 2f) - (ringWidth * 2) + fontSize
+                    val ringSize = (size.minDimension / 2) - (ringWidth + fontSize)
 
                     drawCircle(
                         color = ringColor,
@@ -133,7 +140,7 @@ fun TimeRangePicker(
                     val centerText = "$startText\n$endText"
                     val centerTextStyle = TextStyle.Default.copy(
                         color = centerTextColor,
-                        fontSize = fontSize.sp,
+                        fontSize = fontSize.toSp(),
                         textAlign = TextAlign.Center
                     )
                     val centerTextSize = measurer.measure(
@@ -164,7 +171,9 @@ fun TimeRangePicker(
                     }
 
                     val arcSize = Size(ringSize * 2, ringSize * 2)
-                    val arcOffset = Offset(ringWidth * 2 - fontSize, ringWidth * 2 - fontSize)
+                    val arcOffsetValue = ringWidth + fontSize
+                    val arcOffset = Offset(arcOffsetValue, arcOffsetValue)
+
                     drawArc(
                         color = selectedArcColor.copy(alpha = .25f),
                         startAngle = startAngle,
@@ -200,15 +209,9 @@ fun TimeRangePicker(
                         val hour = ((angle / QUANT) + 6).toFloat()
 
                         if (isHour) {
-                            val text = hour.toInt().toString()
-                            val textSize = measurer.measure(text)
+                            val hourText = hour.toInt().toString()
 
-                            val width = (size.width / 2 - textSize.size.width / 2)
-                            val textX = cos(radians) * width + size.center.x - padding.value
-                            val height = (size.height / 2 - textSize.size.height / 2)
-                            val textY = sin(radians) * height + size.center.y - padding.value
-
-                            val textColor = if (state.start < state.end) {
+                            val hourTextColor = if (state.start < state.end) {
                                 if (hour in state.start..state.end) ringTextColor
                                 else ringTextColor.copy(alpha = .5f)
                             } else {
@@ -216,17 +219,29 @@ fun TimeRangePicker(
                                     ringTextColor
                                 } else ringTextColor.copy(alpha = .5f)
                             }
-                            val textStyle = TextStyle.Default.copy(
-                                color = textColor,
-                                fontSize = (size.minDimension / FONT_SCALE).sp
+
+                            val hourTextStyle = TextStyle.Default.copy(
+                                color = hourTextColor,
+                                fontSize = fontSize.toSp()
                             )
+
+                            val hourTextSize = measurer.measure(
+                                text = hourText,
+                                style = hourTextStyle
+                            )
+
+                            val hourTextRingSize = size.minDimension / 2 - fontSize * .75f
+                            val hourTextX = cos(radians) * (hourTextRingSize) + size.center.x
+                            val hourTextY = sin(radians) * (hourTextRingSize) + size.center.y
+
                             drawText(
                                 textMeasurer = measurer,
-                                text = text,
-                                style = textStyle,
+                                text = hourText,
+                                style = hourTextStyle,
                                 topLeft = Offset(
-                                    textX.toFloat() - textSize.size.width / 2,
-                                    textY.toFloat() - textSize.size.height / 2
+                                    hourTextX.toFloat() - hourTextSize.size.width / 2,
+                                    hourTextY.toFloat() - hourTextSize.size.height / 2
+
                                 )
                             )
                         }
