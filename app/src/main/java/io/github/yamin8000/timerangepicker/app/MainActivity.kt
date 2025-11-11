@@ -32,6 +32,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import ir.yamins.timerangepicker.TimeRangePicker
 import io.github.yamin8000.timerangepicker.app.ui.theme.AppTheme
@@ -73,7 +74,13 @@ private fun Content(
                                 end = Random.nextInt(0..23).toFloat()
                             )
                             TimeRangePicker(
-                                state = state
+                                state = state,
+                                ringColor = Color(0xffFFFD55),
+                                selectedArcColor = Color(0xffDE6210),
+                                centerTextColor = Color.Black,
+                                ringTextColor = Color.DarkGray,
+                                startColor = Color(0xffF08784),
+                                endColor = Color(0xffF09B59),
                             )
                         }
                     )
