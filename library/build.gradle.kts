@@ -71,7 +71,7 @@ mavenPublishing {
     publishToMavenCentral(automaticRelease = true)
     signAllPublications()
 
-    coordinates("ir.yamins.timerangepicker", "jvm", "1.0.0")
+    coordinates("ir.yamins.timerangepicker", "timerangepicker-jvm", "1.0.1")
 
     pom {
         name.set("TimeRangePicker")

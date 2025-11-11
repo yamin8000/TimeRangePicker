@@ -35,8 +35,8 @@ class TimeRangePickerState(
         require(initEnd in 0f..23f)
     }
 
-    val startState = mutableFloatStateOf(initStart)
-    val endState = mutableFloatStateOf(initEnd)
+    private val startState = mutableFloatStateOf(initStart)
+    private val endState = mutableFloatStateOf(initEnd)
 
     var start: Float
         get() = startState.floatValue

@@ -45,9 +45,27 @@ TimeRangePicker(
 )
 ```
 
+#### State
+
+You can also access or change state directly if you want.
+
+```kotlin
+Text(
+    text = state.start.toString()
+)
+```
+
+```kotlin
+state.end = 12f
+```
+
 <img src="screens/advanced.png" alt="simple preview" width="500">
 
 ## Install
+
+```kotlin
+implementation("ir.yamins.timerangepicker:timerangepicker-jvm:1.0.1")
+```
 
 ## License
 
