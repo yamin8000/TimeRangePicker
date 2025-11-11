@@ -25,6 +25,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.vanniktech.maven.publish")
 }
 
 android {
@@ -64,4 +65,38 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+}
+
+mavenPublishing {
+    publishToMavenCentral(automaticRelease = true)
+    signAllPublications()
+
+    coordinates("ir.yamins.timerangepicker", "jvm", "1.0.0")
+
+    pom {
+        name.set("TimeRangePicker")
+        description.set("A Circular TimeRangePicker for Jetpack Compose on Android")
+        inceptionYear.set("2025")
+        url.set("https://github.com/yamin8000/TimeRangePicker")
+        licenses {
+            license {
+                name.set("GPL-3.0 license")
+                url.set("https://www.gnu.org/licenses")
+                distribution.set("https://raw.githubusercontent.com/yamin8000/TimeRangePicker/master/LICENSE")
+            }
+        }
+        developers {
+            developer {
+                id.set("yamin8000")
+                name.set("Yamin Siahmargooei")
+                email.set("me@yamins.ir")
+                url.set("https://github.com/yamin8000")
+            }
+        }
+        scm {
+            url.set("https://github.com/yamin8000/TimeRangePicker")
+            connection.set("scm:git:git://github.com/yamin8000/TimeRangePicker.git")
+            developerConnection.set("scm:git:ssh://git@github.com/yamin8000/TimeRangePicker.git")
+        }
+    }
 }
