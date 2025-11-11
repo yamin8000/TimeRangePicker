@@ -1,4 +1,25 @@
-package io.github.yamin8000.timerangepicker
+/*
+ *     TimeRangePicker/TimeRangePicker.library.main
+ *     TimeRangePicker.kt Copyrighted by Yamin Siahmargooei at 2025/11/11
+ *     TimeRangePicker.kt Last modified at 2025/11/11
+ *     This file is part of TimeRangePicker/TimeRangePicker.library.main.
+ *     Copyright (C) 2025  Yamin Siahmargooei
+ *
+ *     TimeRangePicker/TimeRangePicker.library.main is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     TimeRangePicker/TimeRangePicker.library.main is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with TimeRangePicker.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package ir.yamins.timerangepicker
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -29,7 +50,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.toSize
-import io.github.yamin8000.timerangepicker.utils.Utility.euclideanDistance
+import ir.yamins.timerangepicker.utils.Utility.euclideanDistance
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
