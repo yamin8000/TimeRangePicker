@@ -7,9 +7,11 @@ TimePicker but this library is for picking a range of time.
 
 ### Image
 
-<img src="screens/simple.png" alt="simple preview">
+<img src="screens/simple.png" alt="simple preview" width="500">
 
 ### Video
+
+https://github.com/user-attachments/assets/08941f72-3037-440a-96b5-b842156f6c9b
 
 ## Compatibility
 
@@ -43,7 +45,7 @@ TimeRangePicker(
 )
 ```
 
-<img src="screens/advanced.png" alt="simple preview">
+<img src="screens/advanced.png" alt="simple preview" width="500">
 
 ## Install
 
