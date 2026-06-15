@@ -16,3 +16,5 @@ local.properties
 /.idea/markdown.xml
 /.idea/dictionaries/project.xml
 /.idea/deviceManager.xml
+/.idea/betterCommentsSettings.xml
+/screens/ideas/

@@ -21,6 +21,13 @@
 
 pluginManagement {
     repositories {
+        try {
+            if (uri("https://maven.myket.ir/").toURL().readText().isNotBlank()) {
+                maven { url = uri("https://maven.myket.ir/") }
+            }
+        } catch (_: Exception) {
+            //ignored
+        }
         google {
             content {
                 includeGroupByRegex("com\\.android.*")
@@ -35,6 +42,13 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        try {
+            if (uri("https://maven.myket.ir/").toURL().readText().isNotBlank()) {
+                maven { url = uri("https://maven.myket.ir/") }
+            }
+        } catch (_: Exception) {
+            //ignored
+        }
         google()
         mavenCentral()
     }
